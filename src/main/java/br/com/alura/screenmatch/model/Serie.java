@@ -25,9 +25,9 @@ public class Serie {
     private String sinopse;
     //@Transient //indica que o atributo lista de séries vai ficar sem tratamento no banco, está de canto para ser tratado depois
 
-    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)  //um para muitos, precisa mapear na Classe Episódios para ter algo Bidirecionais
     //utilizar o CascadeType.ALL para informar que tudo que for feito na série ser espelhado no episódio, ex: serie apagada episódios apagados
     //FetchType.EAGER é uma estratégia de carregamento que instrui o sistema de persistência (como o Hibernate) a buscar e carregar os dados de um relacionamento imediatamente junto com a entidade principal
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)  //um para muitos, precisa mapear na Classe Episódios para ter algo Bidirecionais
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie(DadosSerie dadosSerie){

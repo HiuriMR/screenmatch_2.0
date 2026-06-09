@@ -1,186 +1,308 @@
-# 🎬 ScreenMatch
+# 🎬 ScreenMatch API
 
-Aplicação desenvolvida em Java com Spring Boot para consulta, tradução e persistência de informações sobre séries utilizando APIs externas.
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17-orange" />
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-blue" />
+  <img src="https://img.shields.io/badge/JPA-Hibernate-yellow" />
+  <img src="https://img.shields.io/badge/REST-API-red" />
+</p>
 
-O projeto consome dados da API OMDb, realiza o processamento das informações recebidas, traduz sinopses automaticamente e armazena os dados em um banco PostgreSQL.
+API REST desenvolvida com **Java 17** e **Spring Boot** para consulta e gerenciamento de séries, temporadas e episódios.
 
----
-
-## 🚀 Funcionalidades
-
-* Buscar séries através da API OMDb
-* Converter respostas JSON para objetos Java utilizando Jackson
-* Traduzir sinopses automaticamente para português
-* Persistir séries no banco de dados PostgreSQL
-* Armazenar informações como:
-
-    * Título
-    * Ano de lançamento
-    * Avaliação IMDb
-    * Gênero
-    * Atores
-    * Poster
-    * Sinopse traduzida
-* Consultar temporadas e episódios
-* Trabalhar com categorias utilizando Enum
+A aplicação consome dados da API **OMDb**, realiza tradução automática de sinopses utilizando a API **MyMemory**, persiste os dados em banco PostgreSQL e disponibiliza endpoints REST para consumo por aplicações frontend.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+# 📸 Demonstração
 
-### Backend
+## Tela Inicial
 
-* Java
+> Adicione aqui um screenshot da tela principal
+
+```text
+docs/images/home.png
+```
+
+## Detalhes da Série
+
+> Adicione aqui um screenshot da tela de detalhes
+
+```text
+docs/images/detalhes.png
+```
+
+---
+
+# 🚀 Tecnologias Utilizadas
+
+## Backend
+
+* Java 17
 * Spring Boot
 * Spring Data JPA
 * Hibernate
-
-### Banco de Dados
-
 * PostgreSQL
+* Maven
+* Jackson
 
-### APIs Externas
+## APIs Externas
 
 * OMDb API
 * MyMemory Translation API
-* OpenAI API (implementação alternativa para tradução)
 
-### Bibliotecas
+## Ferramentas
 
-* Jackson
-* HttpClient (Java 11+)
+* Git
+* GitHub
+* IntelliJ IDEA / Eclipse
 
 ---
 
-## 📂 Estrutura do Projeto
+# 🏗️ Arquitetura
+
+A aplicação segue o padrão de arquitetura em camadas:
 
 ```text
-src
-├── model
-│   ├── Serie
-│   ├── Episodio
-│   ├── DadosSerie
-│   ├── DadosTemporada
-│   ├── DadosEpisodio
-│   └── Categoria
-│
-├── repository
-│   └── SerieRepository
-│
-├── service
-│   ├── ConsumoApi
-│   ├── ConverteDados
-│   ├── ConsultaChatGPT
-│   └── traducao
-│       ├── ConsultaMyMemory
-│       ├── DadosTraducao
-│       └── DadosResposta
-│
-└── principal
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+PostgreSQL
+```
+
+Além disso, utiliza DTOs para evitar exposição direta das entidades da aplicação.
+
+---
+
+# 📋 Funcionalidades
+
+### Séries
+
+✅ Listagem de todas as séries
+
+✅ Consulta das séries mais bem avaliadas
+
+✅ Consulta dos lançamentos mais recentes
+
+✅ Busca por categoria
+
+✅ Consulta de detalhes da série
+
+### Episódios
+
+✅ Listagem de todos os episódios
+
+✅ Consulta por temporada
+
+✅ Top 5 episódios mais bem avaliados
+
+### Integrações
+
+✅ Consumo da OMDb API
+
+✅ Tradução automática de sinopses
+
+✅ Persistência em PostgreSQL
+
+---
+
+# 🗄️ Modelagem
+
+## Série
+
+```java
+Serie
+```
+
+| Campo           | Tipo      |
+| --------------- | --------- |
+| id              | Long      |
+| titulo          | String    |
+| totalTemporadas | Integer   |
+| avaliacao       | Double    |
+| genero          | Categoria |
+| atores          | String    |
+| poster          | String    |
+| sinopse         | String    |
+
+---
+
+## Episódio
+
+```java
+Episodio
+```
+
+| Campo          | Tipo      |
+| -------------- | --------- |
+| id             | Long      |
+| temporada      | Integer   |
+| titulo         | String    |
+| numeroEpisodio | Integer   |
+| avaliacao      | Double    |
+| dataLancamento | LocalDate |
+
+---
+
+## Relacionamento
+
+```text
+Serie (1)
+    │
+    │
+    ▼
+Episodio (N)
 ```
 
 ---
 
-## 🏗️ Conceitos Aplicados
+# 🔗 Endpoints
 
-* Programação Orientada a Objetos (POO)
-* Injeção de Dependência
-* Repository Pattern
-* DTOs
-* Records
-* Generics
-* Consumo de APIs REST
-* Conversão JSON ↔ Objetos Java
-* Persistência com JPA/Hibernate
-* Variáveis de Ambiente
-* Tratamento de Exceções
-* Integração com serviços externos
+## Séries
+
+| Método | Endpoint                      |
+| ------ | ----------------------------- |
+| GET    | /series                       |
+| GET    | /series/top5                  |
+| GET    | /series/lancamentos           |
+| GET    | /series/{id}                  |
+| GET    | /series/categoria/{categoria} |
 
 ---
 
-## ⚙️ Configuração
+## Episódios
 
-### Variáveis de Ambiente
+| Método | Endpoint                         |
+| ------ | -------------------------------- |
+| GET    | /series/{id}/temporadas/todas    |
+| GET    | /series/{id}/temporadas/{numero} |
+| GET    | /series/{id}/temporadas/top      |
 
-Configure as seguintes variáveis:
+---
 
-```env
-DB_HOST=localhost
-DB_NAME=screenmatch
-DB_USER=postgres
-DB_PASSWORD=sua_senha
-OPENAI_APIKEY=sua_chave
+# ⚙️ Como Executar
+
+## 1 - Clone o projeto
+
+```bash
+git clone https://github.com/SEU-USUARIO/screenmatch-api.git
 ```
 
-### Banco de Dados
+---
 
-Certifique-se de que o PostgreSQL esteja em execução.
+## 2 - Entre na pasta
 
-Exemplo de configuração:
+```bash
+cd screenmatch-api
+```
+
+---
+
+## 3 - Configure o PostgreSQL
+
+Crie um banco:
+
+```sql
+CREATE DATABASE screenmatch;
+```
+
+Configure seu:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://${DB_HOST}:5433/${DB_NAME}
-spring.datasource.username=${DB_USER}
-spring.datasource.password=${DB_PASSWORD}
+application.properties
+```
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/screenmatch
+spring.datasource.username=postgres
+spring.datasource.password=sua_senha
 ```
 
 ---
 
-## ▶️ Executando o Projeto
-
-Clone o repositório:
+## 4 - Execute
 
 ```bash
-git clone https://github.com/seu-usuario/screenmatch.git
+mvn spring-boot:run
 ```
 
-Acesse a pasta do projeto:
-
-```bash
-cd screenmatch
-```
-
-Execute a aplicação:
+ou
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Ou execute a classe principal pela IDE de sua preferência.
+---
+
+# 📂 Estrutura do Projeto
+
+```text
+src
+└── main
+    ├── java
+    │   └── br.com.alura.screenmatch
+    │       ├── config
+    │       ├── controller
+    │       ├── dto
+    │       ├── model
+    │       ├── repository
+    │       ├── service
+    │       └── service.traducao
+    │
+    └── resources
+```
 
 ---
 
-## 📚 Aprendizados
+# 🎯 Conceitos Aplicados
 
-Durante o desenvolvimento deste projeto foram praticados conceitos fundamentais de desenvolvimento backend com Java, incluindo:
-
+* Programação Orientada a Objetos
+* Spring Boot
+* Spring Data JPA
+* Hibernate
+* DTO Pattern
 * Consumo de APIs REST
-* Manipulação de JSON com Jackson
-* Persistência de dados com JPA/Hibernate
-* Integração com serviços externos
-* Uso de Records e Generics
-* Modelagem de entidades
-* Configuração de variáveis de ambiente
-* Integração com banco de dados PostgreSQL
+* Relacionamentos JPA
+* JPQL
+* Records (Java 17)
+* Stream API
+* Persistência com PostgreSQL
+* Arquitetura em Camadas
 
 ---
 
-## 🚧 Melhorias Futuras
+# 🔮 Melhorias Futuras
 
-* Transformar a aplicação em uma API REST
-* Implementar Controllers
-* Criar DTOs para requisições e respostas
-* Adicionar paginação
-* Implementar testes unitários com JUnit e Mockito
-* Dockerizar a aplicação
-* Adicionar autenticação com JWT
-* Criar documentação com Swagger/OpenAPI
+* [ ] Swagger/OpenAPI
+* [ ] Docker
+* [ ] Spring Security + JWT
+* [ ] Testes Unitários (JUnit e Mockito)
+* [ ] Tratamento Global de Exceções
+* [ ] Deploy em Cloud
 
 ---
 
-## 👨‍💻 Autor
+# 🌐 Frontend
 
-**Hiuri Marques Rocha**
+O frontend da aplicação encontra-se em um repositório separado:
 
-* GitHub: https://github.com/HiuriMR
-* LinkedIn: https://linkedin.com/in/hiuri-rocha
+```text
+screenmatch-front
+```
+
+Responsável por consumir os endpoints da API e apresentar as informações ao usuário.
+
+---
+
+# 👨‍💻 Autor
+
+**Hiuri**
+
+Desenvolvedor Java
+
+LinkedIn: SEU_LINKEDIN
+
+GitHub: https://github.com/SEU_USUARIO
