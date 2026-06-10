@@ -18,21 +18,13 @@ A aplicação consome dados da API **OMDb**, realiza tradução automática de s
 
 ## Tela Inicial
 
-> Adicione aqui um screenshot da tela principal
-
-```text
-docs/images/home.png
-```
+![Lançamentos de Série](https://raw.githubusercontent.com/HiuriMR/screenmatch_2.0/main/docs/images/lancamentosSerie.png)
 
 ## Detalhes da Série
 
-> Adicione aqui um screenshot da tela de detalhes
+![Lançamentos de Série](https://github.com/HiuriMR/screenmatch_2.0/blob/main/docs/images/detalheSerie.png)
 
-```text
-docs/images/detalhes.png
-```
 
----
 
 # 🚀 Tecnologias Utilizadas
 
